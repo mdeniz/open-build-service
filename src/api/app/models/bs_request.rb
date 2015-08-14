@@ -38,10 +38,10 @@ class BsRequest < ActiveRecord::Base
   scope :from_source_project, ->(source_project) { where('bs_request_actions.source_project = ?', source_project).references(:bs_request_actions) }
   scope :in_ids, ->(ids) { where(id: ids) }
   # Searching capabilities using dataTable (1.9)
-  scope :do_search, lambda(search) do
+  scope :do_search, lambda {|search|
     where([searchable_fields.map { |field| "#{field} like ?" }.join(' or '),
            ["%#{search}%"] * searchable_fields.length].flatten)
-  end
+  }
 
   has_many :bs_request_actions, -> { includes([:bs_request_action_accept_info]) }, dependent: :destroy
   has_many :reviews, :dependent => :delete_all

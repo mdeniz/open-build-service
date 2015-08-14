@@ -1,0 +1,13 @@
+scss:
+  enabled: false
+coffeescript:
+  enabled: false
+javascript:
+  enabled: false
+haml:
+  enabled: false
+go: 
+  enabled: false
+
+ruby:
+  config_file: src/api/.rubocop.yml 

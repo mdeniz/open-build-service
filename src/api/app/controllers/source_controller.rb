@@ -567,6 +567,14 @@ class SourceController < ApplicationController
 
   # GET /source/:project/_config
   def show_project_config
+    # TODO
+    # query = params.slice(:rev)
+    # @content = config.content(query)
+    # -> forward_from_backend
+    # setting some random headers
+    # and sending file to user
+    # Where do we want to put this method? Probably belongs to controller ...
+
     path = request.path_info
     path += build_query_from_hash(params, [:rev])
     pass_to_backend path
@@ -578,21 +586,21 @@ class SourceController < ApplicationController
 
   # PUT /source/:project/_config
   def update_project_config
-    # check for project
-    prj = Project.get_by_name(params[:project])
+    project = Project.get_by_name(params[:project])
 
-    # assemble path for backend
-    params[:user] = User.current.login
-
-    unless User.current.can_modify_project?(prj)
-      raise PutProjectConfigNoPermission.new "No permission to write build configuration for project '#{params[:project]}'"
+    unless User.current.can_modify_project?(project)
+      raise PutProjectConfigNoPermission, "No permission to write build configuration for project '#{params[:project]}'"
     end
 
-    # assemble path for backend
-    path = request.path_info
-    path += build_query_from_hash(params, [:user, :comment])
+    params[:user] = User.current.login
+    query = params.slice(:user, :comment)
 
-    pass_to_backend path
+    project.config.content = request.body
+    response = project.config.save(query)
+
+    send_data(response.body,
+              type: response.fetch('content-type'),
+              disposition: 'inline')
   end
 
   def pubkey_path

@@ -6,7 +6,6 @@ class PackageFile < BackendFile
 
   def full_path(params = {})
     query = params.blank? ? '' : "?#{params.to_query}"
-    URI::encode("/source/#{project_name}/#{package_name}/#{name}") + query
+    URI.encode("/source/#{project_name}/#{package_name}/#{name}") + query
   end
-
 end

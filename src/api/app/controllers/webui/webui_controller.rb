@@ -2,6 +2,8 @@
 # Likewise, all the methods added will be available for all controllers.
 
 class Webui::WebuiController < ActionController::Base
+  use_vanity :pundit_user
+
   helper_method :valid_xml_id
 
   Rails.cache.set_domain if Rails.cache.respond_to?('set_domain')

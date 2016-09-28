@@ -683,6 +683,17 @@ OBSApi::Application.routes.draw do
   get 'main/sitemap' => 'webui/main#sitemap'
   get 'main/sitemap_projects' => 'webui/main#sitemap_projects'
   get 'main/sitemap_packages/:listaction' => 'webui/main#sitemap_packages'
+
+  # For Vanity dashboard
+  get '/vanity' =>'vanity#index'
+  get '/vanity/participant/:id' => 'vanity#participant'
+  post '/vanity/complete'
+  post '/vanity/chooses'
+  post '/vanity/reset'
+  post '/vanity/enable'
+  post '/vanity/disable'
+  post '/vanity/add_participant'
+  get '/vanity/image'
 end
 
 OBSEngine::Base.subclasses.each do |engine|

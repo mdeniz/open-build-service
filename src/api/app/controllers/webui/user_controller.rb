@@ -197,6 +197,8 @@ class Webui::UserController < Webui::WebuiController
       return
     end
 
+    Vanity.track!(:signups)      # track successful sign up
+
     flash[:success] = "The account '#{params[:login]}' is now active."
 
     if User.current.is_admin?

@@ -700,6 +700,7 @@ class Package < ApplicationRecord
     # no write access check here, since this operation may will disable this permission ...
     self.commit_opts = opts if opts
     save!
+    Vanity.track!(:package_store)
   end
 
   def reset_cache

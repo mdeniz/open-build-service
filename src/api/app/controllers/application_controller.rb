@@ -12,6 +12,8 @@ class ApplicationController < ActionController::Base
 
   include ForbidsAnonymousUsers
 
+  use_vanity :pundit_user
+
   class NoDataEntered < APIException
     setup 403
   end

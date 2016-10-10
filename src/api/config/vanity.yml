@@ -1,0 +1,18 @@
+development:
+  adapter: active_record
+  active_record_adapter: mysql2
+  database: api_development
+  username: root
+  password: opensuse
+test:
+  adapter: active_record
+  active_record_adapter: mysql2
+  database: api_test
+  username: root
+  password: opensuse
+production:
+  adapter: active_record
+  active_record_adapter: mysql2
+  database: api_production
+  username: root
+  password: opensuse

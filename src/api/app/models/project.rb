@@ -878,6 +878,7 @@ class Project < ApplicationRecord
       save!
       write_to_backend
     end
+    Vanity.track!(:project_store)
   end
 
   # The backend takes care of deleting the packages,

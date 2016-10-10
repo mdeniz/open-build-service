@@ -6,6 +6,11 @@ require 'workers/accept_requests'
 include MaintenanceHelper
 
 class BsRequest < ApplicationRecord
+
+  after_create {|request| Vanity.track!(:request_create)}
+  after_update {|request| Vanity.track!(:request_update)}
+  after_destroy {|request| Vanity.track!(:request_destroy)}
+
   class InvalidStateError < APIException
     setup 'request_not_modifiable', 404
   end

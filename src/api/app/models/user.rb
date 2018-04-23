@@ -21,6 +21,7 @@ end
 
 class User < ApplicationRecord
   include CanRenderModel
+  include GetsTracked
 
   # Keep in sync with states defined in db/structure.sql
   STATES = ['unconfirmed', 'confirmed', 'locked', 'deleted', 'subaccount'].freeze
@@ -621,6 +622,8 @@ class User < ApplicationRecord
       prj.commit_opts = { comment: 'User account got deleted' }
       prj.destroy
     end
+
+    track_on_destroy
   end
 
   def involved_projects

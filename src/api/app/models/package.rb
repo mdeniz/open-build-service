@@ -15,6 +15,7 @@ class Package < ApplicationRecord
 
   include HasRatings
   include HasAttributes
+  include GetsTracked
 
   class PackageError < StandardError; end
 

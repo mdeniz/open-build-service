@@ -510,7 +510,7 @@ class Package < ApplicationRecord
   end
 
   def source_file(file, opts = {})
-    Backend::Connection.get(source_path(file, opts)).body
+    Backend::Api::Sources::Package.file(project.name, name, file, opts)
   end
 
   # Reads the source file and converts it into an ActiveXML::Node

@@ -42,6 +42,12 @@ module Backend
           http_get(['/source/:project/:package/_meta', project_name, package_name])
         end
 
+        # Returns the channel file from a package
+        # @return [String]
+        def self.channel(project_name, package_name)
+          http_get(['/source/:project/:package/_channel', project_name, package_name])
+        end
+
         # It triggers all the services of a package
         # @return [String]
         def self.trigger_services(project_name, package_name, user_login)
@@ -143,6 +149,12 @@ module Backend
         # Deletes the package and all the source files inside
         def self.delete(project_name, package_name)
           http_delete(['/source/:project/:package', project_name, package_name])
+        end
+
+        # Returns all products of a package (works only on "_product" packages)
+        # @return [String]
+        def self.products(project_name, package_name)
+          http_get(['/source/:project/:package', project_name, package_name], defaults: { view: :products })
         end
       end
     end

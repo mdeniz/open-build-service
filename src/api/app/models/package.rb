@@ -237,8 +237,7 @@ class Package < ApplicationRecord
 
   def self.exists_on_backend?(package, project)
     begin
-      answer = Backend::Connection.get(Package.source_path(project, package))
-      return true if answer
+      return true if Backend::Api::Sources::Package.files(project.name, package.name)
     rescue ActiveXML::Transport::Error
       # ignored
     end
@@ -633,9 +632,9 @@ class Package < ApplicationRecord
   # rubocop:disable Style/GuardClause
   def update_channel_list
     if is_channel?
-      xml = Backend::Connection.get(source_path('_channel'))
+      xml = Backend::Api::Sources::Package.channel(project.name, name)
       begin
-        channels.first_or_create.update_from_xml(xml.body.to_s)
+        channels.first_or_create.update_from_xml(xml)
       rescue ActiveRecord::RecordInvalid => e
         if Rails.env.test?
           raise e
@@ -662,7 +661,8 @@ class Package < ApplicationRecord
 
     Product.transaction do
       begin
-        xml = Xmlhash.parse(Backend::Connection.get(source_path(nil, view: :products)).body)
+        xml_products = Backend::Api::Sources::Package.products(project.name, name)
+        xml = Xmlhash.parse(xml_products)
       rescue
         return
       end

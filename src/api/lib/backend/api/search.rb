@@ -24,6 +24,13 @@ module Backend
         conditions << "starts-with(@project,\"#{CGI.escape(maintenance_project_name)}%3A\")"
         http_post("/search/package/id?match=(#{conditions.join('+and+')})")
       end
+
+      def self.linking_packages(project_name, package_name, is_local)
+        conditions = ["linkinfo/@package=\"#{CGI.escape(package_name)}\""]
+        conditions << "linkinfo/@project=\"#{CGI.escape(project_name)}\""
+        conditions << "@project=\"#{CGI.escape(project_name)}\"" if is_local
+        http_post("/search/package/id?match=(#{conditions.join('+and+')})")
+      end
     end
   end
 end

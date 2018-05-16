@@ -156,6 +156,16 @@ module Backend
         def self.products(project_name, package_name)
           http_get(['/source/:project/:package', project_name, package_name], defaults: { view: :products })
         end
+
+        # Returns the list of issues
+        # @option options [Boolean] :is_link Package is a link
+        # @return [String]
+        def self.issues(project_name, package_name, options = {})
+          defaults = { view: :xml, linkrev: :base, onlyissues: 1 }
+          defaults[:cmd] = options[:is_link] ? :linkdiff : :diff
+          defaults[:orev] = 0 unless options[:is_link]
+          http_post(['/source/:project/:package', project_name, package_name], defaults: defaults)
+        end
       end
     end
   end

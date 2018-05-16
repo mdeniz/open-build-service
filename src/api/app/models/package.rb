@@ -564,20 +564,20 @@ class Package < ApplicationRecord
     PackageIssue.sync_relations(self, current_issues)
   end
 
-  def parse_issues_xml(query, force_state = nil)
+  def parse_issues_xml(options = {})
     begin
-      answer = Backend::Connection.post(source_path(nil, query))
+      answer = Backend::Api::Sources::Package.issues(project.name, name, options)
     rescue ActiveXML::Transport::Error => e
       Rails.logger.debug "failed to parse issues: #{e.inspect}"
       return {}
     end
-    xml = Xmlhash.parse(answer.body)
+    xml = Xmlhash.parse(answer)
 
     # collect all issues and put them into an hash
     issues = {}
     xml.get('issues').elements('issue') do |i|
       issues[i['tracker']] ||= {}
-      issues[i['tracker']][i['name']] = force_state || i['state']
+      issues[i['tracker']][i['name']] = options[:force_state] || i['state']
     end
 
     issues
@@ -585,12 +585,10 @@ class Package < ApplicationRecord
 
   def find_changed_issues
     # no expand=1, so only branches are tracked
-    query = { cmd: :diff, orev: 0, onlyissues: 1, linkrev: :base, view: :xml }
-    issue_change = parse_issues_xml(query, 'kept')
+    issue_change = parse_issues_xml(force_state: 'kept')
     # issues introduced by local changes
     if is_link?
-      query = { cmd: :linkdiff, onlyissues: 1, linkrev: :base, view: :xml }
-      new = parse_issues_xml(query)
+      new = parse_issues_xml(is_link: true)
       (issue_change.keys + new.keys).uniq.each do |key|
         issue_change[key] ||= {}
         issue_change[key].merge!(new[key]) if new[key]

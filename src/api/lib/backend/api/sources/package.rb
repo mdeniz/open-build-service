@@ -166,6 +166,15 @@ module Backend
           defaults[:orev] = 0 unless options[:is_link]
           http_post(['/source/:project/:package', project_name, package_name], defaults: defaults)
         end
+
+        # Updates the meta file of a package
+        # @option options [String] :user Login of the user that performs the update.
+        # @option options [String] :requestid Id of the Request that updates the meta.
+        # @option options [String] :comment Comment to attach to this operation.
+        def self.update_meta(project_name, package_name, content, options = {})
+          http_put(['/source/:project/:package/_meta', project_name, package_name], data: content,
+                   params: options, accepted: [:comment, :requestid, :user])
+        end
       end
     end
   end

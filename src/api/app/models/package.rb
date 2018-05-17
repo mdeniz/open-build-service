@@ -798,11 +798,11 @@ class Package < ApplicationRecord
     reset_cache
     #--- write through to backend ---#
     if CONFIG['global_write_through'] && !@commit_opts[:no_backend_write]
-      query = { user: User.current_login }
-      query[:comment] = @commit_opts[:comment] if @commit_opts[:comment].present?
+      options = { user: User.current_login }
+      options[:comment] = @commit_opts[:comment] if @commit_opts[:comment].present?
       # the request number is the requestid parameter in the backend api
-      query[:requestid] = @commit_opts[:request].number if @commit_opts[:request]
-      Backend::Connection.put(source_path('_meta', query), to_axml)
+      options[:requestid] = @commit_opts[:request].number if @commit_opts[:request]
+      Backend::Api::Sources::Package.update_meta(project.name, name, to_axml, options)
       logger.tagged('backend_sync') { logger.debug "Saved Package #{project.name}/#{name}" }
     elsif @commit_opts[:no_backend_write]
       logger.tagged('backend_sync') { logger.warn "Not saving Package #{project.name}/#{name}, backend_write is off " }

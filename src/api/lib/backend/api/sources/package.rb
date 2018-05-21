@@ -147,8 +147,11 @@ module Backend
         end
 
         # Deletes the package and all the source files inside
-        def self.delete(project_name, package_name)
-          http_delete(['/source/:project/:package', project_name, package_name])
+        # @option options [String] :user Login of the user that performs the update.
+        # @option options [String] :requestid Id of the Request that updates the meta.
+        # @option options [String] :comment Comment to attach to this operation.
+        def self.delete(project_name, package_name, options = {})
+          http_delete(['/source/:project/:package', project_name, package_name], params: options, accepted: [:user, :comment, :requestid])
         end
 
         # Returns all products of a package (works only on "_product" packages)

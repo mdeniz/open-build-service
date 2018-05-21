@@ -822,13 +822,10 @@ class Package < ApplicationRecord
     return if name == '_project'
 
     if CONFIG['global_write_through'] && !@commit_opts[:no_backend_write]
-      path = source_path
-
-      h = { user: User.current.login, comment: commit_opts[:comment] }
-      h[:requestid] = commit_opts[:request].number if commit_opts[:request]
-      path << Backend::Connection.build_query_from_hash(h, [:user, :comment, :requestid])
+      options = { user: User.current.login, comment: commit_opts[:comment] }
+      options[:requestid] = commit_opts[:request].number if commit_opts[:request]
       begin
-        Backend::Connection.delete path
+        Backend::Api::Sources::Package.delete(project.name, name, options)
       rescue ActiveXML::Transport::NotFoundError
         # ignore this error, backend was out of sync
         logger.tagged('backend_sync') { logger.warn("Package #{project.name}/#{name} was already missing on backend on removal") }

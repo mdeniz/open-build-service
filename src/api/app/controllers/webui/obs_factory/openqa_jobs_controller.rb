@@ -1,4 +1,4 @@
-module ObsFactory
+module Webui::ObsFactory
   class OpenqaJobsController < ApplicationController
     respond_to :json, :html
 

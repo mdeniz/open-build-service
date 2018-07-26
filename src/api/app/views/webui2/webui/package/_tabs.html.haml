@@ -1,0 +1,29 @@
+.bg-light
+  %ul.nav.nav-tabs.pt-2.px-3
+    - if @package.name == "patchinfo"
+      %li.nav-item
+        = link_to(patchinfo_show_path, id: 'tab-details', class: "nav-link#{' active' if current_page?(patchinfo_show_path)}") do
+          Details
+    %li.nav-item
+      = link_to(package_show_path, id: 'tab-overview', class: "nav-link#{' active' if current_page?(package_show_path)}") do
+        Overview
+    - unless @spider_bot
+      %li.nav-item
+        = link_to(repositories_path, id: 'tab-repositories', class: "nav-link#{' active' if current_page?(repositories_path)}") do
+          Repositories
+      %li.nav-item
+        = link_to(package_view_revisions_path, id: 'tab-revisions', class: "nav-link#{' active' if current_page?(package_view_revisions_path)}") do
+          Revisions
+      %li.nav-item
+        = link_to(package_requests_path, id: 'tab-requests', class: "nav-link#{' active' if current_page?(package_requests_path)}") do
+          Requests
+      %li.nav-item
+        = link_to(package_users_path, id: 'tab-users', class: "nav-link#{' active' if current_page?(package_users_path)}") do
+          Users
+      %li.nav-item.dropdown
+        %a.nav-link.dropdown-toggle{ href: '#', "data-toggle": "dropdown", "role": "button", "aria-haspopup": "true", "aria-expanded": "false" } Advanced
+        .dropdown-menu
+          = link_to(index_attribs_path(@project, @package), class: 'dropdown-item') do
+            Attributes
+          = link_to(package_meta_path, class: 'dropdown-item') do
+            Meta

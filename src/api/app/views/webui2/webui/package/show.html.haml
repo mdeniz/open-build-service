@@ -78,13 +78,19 @@
         = possibly_empty_ul class: 'nav' do
           - if @bugowners_mail.present? and @configuration['bugzilla_url']
             %li.nav-item
-              = link_to image_tag('icons/tools-report-bug', title: 'Report Bug') + ' Report Bug', bugzilla_url(@bugowners_mail, "#{@project.name}/#{@package.name}: Bug", class: 'nav-link')
+              = link_to(bugzilla_url(@bugowners_mail, "#{@project.name}/#{@package.name}: Bug"), class: 'nav-link') do
+                %i.fas.fa-bug.text-danger
+                Report Bug
           - unless User.current.is_nobody?
             - if @current_rev
               %li.nav-item
-                = link_to(image_tag('icons/arrow_branch', title: 'Branch package') + ' Branch package', '#', class: 'nav-link', data: { "toggle": "modal", "target": "#branchModal" })
+                = link_to('#', class: 'nav-link', data: { "toggle": "modal", "target": "#branchModal" }) do
+                  %i.fas.fa-code-branch.text-primary
+                  Branch package
               %li.nav-item
-                = link_to(image_tag('icons/package_go', title: 'Submit package') + ' Submit package', { :action => :submit_request_dialog, :project => @project, :package => @package, :revision => @revision }, :remote => true, class: 'nav-link')
+                = link_to({ action: :submit_request_dialog, project: @project, package: @package, revision: @revision, remote: true }, class: 'nav-link') do
+                  %i.fas.fa-share-square.text-package
+                  Submit package
               - if User.current.can_modify? @package
                 %li.nav-item
                   = link_to image_tag('icons/package_edit', title: 'Edit description') + ' Edit description', {:action => 'edit', :project => @project, :package => @package, :spec_count => @spec_count}, class: 'nav-link'

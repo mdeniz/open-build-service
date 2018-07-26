@@ -129,7 +129,7 @@ OBSApi::Application.routes.draw do
         defaults format: 'js' do
           get 'package/linking_packages/:project/:package' => :linking_packages, constraints: cons
           get 'package/update_build_log/:project/:package/:repository/:arch' => :update_build_log, constraints: cons
-          get 'package/submit_request_dialog/:project/:package' => :submit_request_dialog, constraints: cons
+          get 'package/submit_request_dialog/:project/:package' => :submit_request_dialog, constraints: cons, as: 'package_submit_request_dialog'
           get 'package/delete_dialog/:project/:package' => :delete_dialog, constraints: cons
           post 'package/trigger_rebuild/:project/:package' => :trigger_rebuild, constraints: cons
           get 'package/abort_build/:project/:package' => :abort_build, constraints: cons

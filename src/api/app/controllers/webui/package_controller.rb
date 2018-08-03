@@ -90,6 +90,7 @@ class Webui::PackageController < Webui::WebuiController
   end
 
   def linking_packages
+    switch_to_webui2
     render_dialog
   end
 
@@ -254,6 +255,7 @@ class Webui::PackageController < Webui::WebuiController
 
     @description = @package.commit_message(@tprj, @tpkg)
 
+    switch_to_webui2
     render_dialog
   end
 
@@ -617,6 +619,7 @@ class Webui::PackageController < Webui::WebuiController
   end
 
   def delete_dialog
+    switch_to_webui2
     render_dialog
   end
 

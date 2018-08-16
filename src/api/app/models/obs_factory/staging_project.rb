@@ -14,10 +14,21 @@ module ObsFactory
     NAME_PREFIX = ":Staging:".freeze
     ADI_NAME_PREFIX = ":Staging:adi:".freeze
 
+    # DEFINITIONS...
+    # distribution = The top project (example: openSUSE:Factory)
+    # ring project = A project (example: openSUSE:Factory:Rings:0-Bootstrap)
+    # staging project = A project with requests going to a ring project (example: openSUSE:Factory:Staging:A)
+    # ADI = A project with requests NOT going to a ring project (example: openSUSE:Factory:Staging:adi:1)
+
     # Find all staging projects for a given distribution
     #
     # @param [Boolean] only_letter  only letter stagings, otherwise all stagings
     # @return [Array] array of StagingProject objects
+    # NOTE: Move to Project
+    # It should include:
+    #   project.find_staging_projects
+    #   project.find_adi_projects
+    #   project.find_staging_and_adi_projects
     def self.for(distribution, only_letter = true)
       wildcard = only_letter ? "_" : "%"
       ::Project.where(["name like ?", "#{distribution.root_project_name}#{NAME_PREFIX}#{wildcard}"]).
@@ -27,6 +38,10 @@ module ObsFactory
     # Find a staging project by distribution and id
     #
     # @return [StagingProject] the project
+    # NOTE: Move to Project
+    # It should include:
+    #   project.find_staging_projects where id is A
+    #   project.find_adi_projects where id is adi:1
     def self.find(distribution, id)
       project = ::Project.find_by_name("#{distribution.root_project_name}#{NAME_PREFIX}#{id}")
       if project
@@ -37,16 +52,19 @@ module ObsFactory
     # Name of the associated project
     #
     # @return [String] name of the Project object
+    # NOTE: Move to Project
     delegate :name, to: :project
 
     # Description of the associated project
     #
     # @return [String] description of the Project object
+    # NOTE: Move to Project
     delegate :description, to: :project
 
     # Checks if the project is adi staging project
     #
     # @return [Boolean] true if the project is adi staging project
+    # NOTE: Move to Project
     def adi_staging?
       /#{ADI_NAME_PREFIX}/.match?(name)
     end

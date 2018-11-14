@@ -59,6 +59,17 @@ module Staging
       @overall_state ||= state
     end
 
+    def assign_managers_group(managers)
+      role = Role.find_by_title!('maintainer')
+      return if relationships.find_by(group: managers, role: role)
+      Relationship.add_group(self, managers, role, nil, true)
+    end
+
+    def unassign_managers_group(managers)
+      role = Role.find_by_title!('maintainer')
+      relationships.find_by(group: managers, role: role).try(:destroy)
+    end
+
     private
 
     def state

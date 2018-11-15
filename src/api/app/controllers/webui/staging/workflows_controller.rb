@@ -59,10 +59,10 @@ class Webui::Staging::WorkflowsController < Webui::WebuiController
     @staging_workflow.staging_projects.where(id: params[:staging_project_ids]).destroy_all
 
     if @staging_workflow.destroy
-      flash[:success] = "Staging Workflow for #{@project.name} was successfully deleted."
+      flash[:success] = "Staging for #{@project.name} was successfully deleted."
       render js: "window.location='#{project_show_path(@project)}'"
     else
-      flash[:error] = "Staging Workflow for #{@project.name} couldn't be deleted: #{@staging_workflow.errors.full_messages.to_sentence}."
+      flash[:error] = "Staging for #{@project.name} couldn't be deleted: #{@staging_workflow.errors.full_messages.to_sentence}."
       render js: "window.location='#{staging_workflow_path(@staging_workflow)}'"
     end
   end
@@ -103,7 +103,7 @@ class Webui::Staging::WorkflowsController < Webui::WebuiController
     return if @staging_workflow
 
     redirect_back(fallback_location: root_path)
-    flash[:error] = "StagingWorkflow with id = #{params[:id]} doesn't exist"
+    flash[:error] = "Staging with id = #{params[:id]} doesn't exist"
     return
   end
 end
